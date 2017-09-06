@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Survey Form</title>
+        <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type ="text/javascript">
+
+            $(document).ready(function(){
+                const socket = io.connect();
+
+                $('button').click(function(e){
+                    e.preventDefault();
+                    socket.emit('posting_form', {
+                        name: $('#name').val(),
+                        location: $('#location').val(),
+                        language: $('#language').val(),
+                        comment: $('#comment').val()
+                    });
+                });
+
+                socket.on('updated_message', function(data){
+
+                    $('#formMessage').html(`<p>You emitted the following information to the server: ${ JSON.stringify(data.post_data) }</p>
+       		    	<p>Your lucky number emitted by the server is: ${ data.rand }</p>`);
+                });
+            });
+
+        </script>
+    </head>
+    <body>
+
+        <div id="formMessage"></div>
+
+        <form>
+            <label for="name">Your Name: </label>
+            <input type="text" name="firstname"></br>
+            <label for="location"> Dojo Location:</label>
+             <select  name="location">
+                            <option value="online">Online</option>
+                            <option value="seattle">Seattle</option>
+                            <option value="la">Los Angeles</option>
+                            <option value="dallas">Dallas</option>
+                            <option value="chicago">Chicago</option>
+                           </select></br>
+            <label for="language">Favorite Language:</label>
+             <select  name="language">
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="php">PHP</option>
+                                <option value="html">HTML</option>
+                           </select></br>
+            <label for="comment"> Comment (optional, yet appreciated!):</label></br>
+            <textarea name="comment" rows="8" cols="30"></textarea></br>
+            <button type="submit" name="submit">Submit</button>
+        </form>
+    </body>
+</html>
